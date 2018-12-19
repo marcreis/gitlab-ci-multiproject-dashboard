@@ -1,43 +1,33 @@
 <template>
-    <v-avatar :class="getPipelineStatusColor">
-        <v-icon dark>{{ getPipelineStatusIcon }}</v-icon>
-    </v-avatar>
+    <v-chip :key="pipeline.id" @click="openPipeline">
+        <StatusIndicator :pipeline="pipeline"/>
+        {{ pipeline.ref }}
+    </v-chip>
 </template>
 <script>
+import StatusIndicator from './StatusIndicator';
+
 export default {
   name: 'PipelineStatus',
+  components: { StatusIndicator },
   props: {
+    project: {},
     pipeline: {},
-  },
-  computed: {
-    getPipelineStatusColor() {
-      switch (this.pipeline.status) {
-        case 'success':
-          return 'green';
-        case 'failed':
-          return 'red'
-        case 'pending':
-          return 'orange'
-        case 'running':
-          return 'blue'
-        default:
-          return 'grey darken-1';
-      }
+    objecttype: {
+      type: String,
+      default: 'pipelines',
     },
-    getPipelineStatusIcon() {
-      switch (this.pipeline.status) {
-        case 'success':
-          return 'check';
-        case 'failed':
-          return 'block'
-        case 'pending':
-          return 'pause'
-        case 'running':
-          return 'play_arrow'
-        default:
-          return 'remove';
-      }
+  },
+  methods: {
+    openPipeline() {
+      window.open(`${this.project.web_url}/${this.objecttype}/${this.pipeline.id}`, '_blank');
     },
   },
 };
 </script>
+
+<style>
+.chip .chip__content{
+  cursor: pointer;
+}
+</style>
